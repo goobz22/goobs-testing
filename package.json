@@ -1,6 +1,6 @@
 {
   "name": "goobs-testing",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A robust testing toolkit for JavaScript and TypeScript projects, offering custom assertions, advanced mocking utilities, performance profiling, benchmarking tools, flexible logging options, and seamless integration with Jest and Husky for enhanced test-driven development workflows.",
   "main": "src/index.ts",
   "types": "src/index.ts",
