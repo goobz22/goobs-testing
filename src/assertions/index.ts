@@ -1,5 +1,9 @@
 import { expect } from '@jest/globals';
 
+export function expectToBeGreaterThan(actual: number, expected: number): void {
+  expect(actual).toBeGreaterThan(expected);
+}
+
 export function expectToBeWithinRange(actual: number, min: number, max: number): void {
   expect(actual).toBeGreaterThanOrEqual(min);
   expect(actual).toBeLessThanOrEqual(max);
@@ -93,4 +97,11 @@ export function expectToBeSorted(
 ): void {
   const sortedArray = [...array].sort((a, b) => (order === 'ascending' ? a - b : b - a));
   expect(array).toEqual(sortedArray);
+}
+
+export function wrapExpectToThrowError(
+  func: () => Promise<void>,
+  errorMessage?: string,
+): Promise<void> {
+  return expect(func()).rejects.toThrow(errorMessage);
 }
