@@ -19,13 +19,15 @@ import {
   expectToBePromise,
   expectToBeDate,
   expectToBeSorted,
+  expectToBeGreaterThan,
+  wrapExpectToThrowError,
 } from './assertions';
 
 // Error handling
 import { setupErrorHandling, restoreConsoleError } from './error';
 
 // Logging
-import { setupLogging, logTestResults, closeLogStreams, setupHusky } from './logging';
+import { setupLogging, logTestResults, closeLogStreams, TestResult, debugLog } from './logging';
 
 // Mocking utilities
 import {
@@ -68,6 +70,8 @@ export {
   expectToBePromise,
   expectToBeDate,
   expectToBeSorted,
+  expectToBeGreaterThan,
+  wrapExpectToThrowError,
 
   // Error handling
   setupErrorHandling,
@@ -77,7 +81,7 @@ export {
   setupLogging,
   logTestResults,
   closeLogStreams,
-  setupHusky,
+  debugLog,
 
   // Mocking utilities
   mockPerformanceNow,
@@ -101,3 +105,6 @@ export {
   formatBenchmarkResults,
   runBenchmarks,
 };
+
+// Re-export TestResult as a type
+export type { TestResult };
