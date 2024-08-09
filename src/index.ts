@@ -27,7 +27,7 @@ import {
 import { setupErrorHandling, restoreConsoleError } from './error';
 
 // Logging
-import { setupLogging, logTestResults, closeLogStreams, TestResult, debugLog } from './logging';
+import { setupLogging, closeLogStreams, TestResult } from './testing';
 
 // Mocking utilities
 import {
@@ -44,10 +44,18 @@ import {
 } from './mock';
 
 // Performance measurement
-import { measureAsyncExecutionTime, measureMultipleAsyncExecutionTimes } from './performance';
+import {
+  measureAsyncExecutionTime,
+  measureMultipleAsyncExecutionTimes,
+  calculateExecutionTimeStats,
+  measureAsyncExecutionTimeWithStats,
+} from './performance';
 
 // Benchmark utilities
 import { benchmark, compareBenchmarks, formatBenchmarkResults, runBenchmarks } from './benchmark';
+
+import { ClientLogger } from './logging/logger.client';
+import { ServerLogger } from './logging/logger.server';
 
 export {
   // Assertions
@@ -79,9 +87,7 @@ export {
 
   // Logging
   setupLogging,
-  logTestResults,
   closeLogStreams,
-  debugLog,
 
   // Mocking utilities
   mockPerformanceNow,
@@ -98,12 +104,16 @@ export {
   // Performance measurement
   measureAsyncExecutionTime,
   measureMultipleAsyncExecutionTimes,
+  calculateExecutionTimeStats,
+  measureAsyncExecutionTimeWithStats,
 
   // Benchmark utilities
   benchmark,
   compareBenchmarks,
   formatBenchmarkResults,
   runBenchmarks,
+  ClientLogger,
+  ServerLogger,
 };
 
 // Re-export TestResult as a type
