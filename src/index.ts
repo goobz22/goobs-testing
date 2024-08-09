@@ -23,10 +23,7 @@ import {
   wrapExpectToThrowError,
 } from './assertions';
 
-// Error handling
-import { setupErrorHandling, restoreConsoleError } from './error';
-
-// Logging
+// Testing
 import { setupLogging, closeLogStreams, TestResult } from './testing';
 
 // Mocking utilities
@@ -80,10 +77,6 @@ export {
   expectToBeSorted,
   expectToBeGreaterThan,
   wrapExpectToThrowError,
-
-  // Error handling
-  setupErrorHandling,
-  restoreConsoleError,
 
   // Logging
   setupLogging,
