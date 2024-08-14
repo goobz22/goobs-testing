@@ -1,4 +1,4 @@
-import { createLogger, format, transports, Logger } from 'winston';
+'use client';
 
 export type LogLevel = 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug';
 
@@ -8,66 +8,64 @@ export interface GlobalConfig {
   logDirectory: string;
 }
 
-let logger: Logger;
+const logLevels: Record<LogLevel, number> = {
+  error: 0,
+  warn: 1,
+  info: 2,
+  http: 3,
+  verbose: 4,
+  debug: 5,
+};
+
+let currentLogLevel: number = logLevels.info;
+let loggingEnabled: boolean = true;
 
 function initializeLogger(globalConfig: GlobalConfig): void {
-  if (!logger) {
-    logger = createLogger({
-      level: globalConfig.logLevel,
-      silent: !globalConfig.loggingEnabled,
-      format: format.combine(
-        format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-        format.errors({ stack: true }),
-        format.splat(),
-        format.json(),
-        format.metadata({ fillExcept: ['message', 'level', 'timestamp', 'label'] }),
-      ),
-      defaultMeta: { service: 'client' },
-      transports: [
-        new transports.Console({
-          format: format.combine(
-            format.colorize(),
-            format.printf(({ level, message, timestamp, metadata }) => {
-              let msg = `${timestamp} [${level}]: ${message}`;
-              if (Object.keys(metadata).length > 0) {
-                msg += '\n\t' + JSON.stringify(metadata);
-              }
-              return msg;
-            }),
-          ),
-        }),
-      ],
-    });
-  }
-}
-
-function getLogger(): Logger {
-  if (!logger) {
-    throw new Error('Logger not initialized. Call initializeLogger first.');
-  }
-  return logger;
+  currentLogLevel = logLevels[globalConfig.logLevel];
+  loggingEnabled = globalConfig.loggingEnabled;
 }
 
 type LogMetadata = Record<string, unknown>;
 
+function log(level: LogLevel, message: string, metadata?: LogMetadata): void {
+  if (!loggingEnabled || logLevels[level] > currentLogLevel) return;
+
+  const timestamp = new Date().toISOString();
+  let logMessage = `${timestamp} [${level.toUpperCase()}]: ${message}`;
+
+  if (metadata && Object.keys(metadata).length > 0) {
+    logMessage += '\n\t' + JSON.stringify(metadata);
+  }
+
+  switch (level) {
+    case 'error':
+      console.error(logMessage);
+      break;
+    case 'warn':
+      console.warn(logMessage);
+      break;
+    case 'info':
+      console.info(logMessage);
+      break;
+    default:
+      console.log(logMessage);
+  }
+}
+
 function debug(message: string, metadata?: LogMetadata): void {
-  const logger = getLogger();
-  logger.debug(message, metadata);
+  log('debug', message, metadata);
 }
 
 function info(message: string, metadata?: LogMetadata): void {
-  const logger = getLogger();
-  logger.info(message, metadata);
+  log('info', message, metadata);
 }
 
 function warn(message: string, metadata?: LogMetadata): void {
-  const logger = getLogger();
-  logger.warn(message, metadata);
+  log('warn', message, metadata);
 }
 
 function error(message: string, metadata?: LogMetadata): void {
-  const logger = getLogger();
-  logger.error(message, metadata);
+  log('error', message, metadata);
 }
 
 export const ClientLogger = {

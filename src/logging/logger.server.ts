@@ -1,3 +1,5 @@
+'use server';
+
 import { createLogger, format, transports, Logger } from 'winston';
 import path from 'path';
 import { promises as fs } from 'fs';
