@@ -1,5 +1,3 @@
-import { expect } from '@jest/globals';
-
 export function expectToBeGreaterThan(actual: number, expected: number): void {
   expect(actual).toBeGreaterThan(expected);
 }
