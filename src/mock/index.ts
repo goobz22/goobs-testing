@@ -1,21 +1,25 @@
+'use server';
+
 import { performance } from 'perf_hooks';
 
 type MockWithAdvanceTime = jest.Mock<number, []> & {
   advanceTime: (ms: number) => void;
 };
 
-export const mockPerformanceNow = (): MockWithAdvanceTime => {
+export async function mockPerformanceNow(): Promise<MockWithAdvanceTime> {
   let time = 0;
   const mock = jest.fn(() => time) as MockWithAdvanceTime;
   mock.advanceTime = (ms: number) => {
     time += ms;
   };
   return mock;
-};
+}
 
-export const realPerformanceNow = performance.now;
+export async function realPerformanceNow(): Promise<number> {
+  return performance.now();
+}
 
-export const mockConsole = () => {
+export async function mockConsole() {
   const mockLog = jest.fn();
   const mockError = jest.fn();
   const mockWarn = jest.fn();
@@ -34,32 +38,33 @@ export const mockConsole = () => {
     console.info = original.info;
   });
   return { mockLog, mockError, mockWarn, mockInfo };
-};
+}
 
-export const mockFetch = (response: unknown) => {
+export async function mockFetch(response: unknown) {
   return jest.fn().mockImplementation(() =>
     Promise.resolve({
       ok: true,
       json: () => Promise.resolve(response),
     }),
   );
-};
+}
 
-export const mockAsyncFunction = <T>(result: T, delay = 0) => {
+export async function mockAsyncFunction<T>(result: T, delay = 0) {
   return jest
     .fn()
     .mockImplementation(() => new Promise((resolve) => setTimeout(() => resolve(result), delay)));
-};
+}
 
-export const createMockEvent = <T extends Record<string, unknown> = Record<string, unknown>>(
+export async function createMockEvent<T extends Record<string, unknown> = Record<string, unknown>>(
   overrides?: Partial<T>,
-): T & { preventDefault: jest.Mock } =>
-  ({
+): Promise<T & { preventDefault: jest.Mock }> {
+  return {
     preventDefault: jest.fn(),
     ...overrides,
-  }) as T & { preventDefault: jest.Mock };
+  } as T & { preventDefault: jest.Mock };
+}
 
-export const mockLocalStorage = () => {
+export async function mockLocalStorage() {
   const store: { [key: string]: string } = {};
   return {
     getItem: jest.fn((key: string) => store[key] || null),
@@ -73,22 +78,22 @@ export const mockLocalStorage = () => {
       Object.keys(store).forEach((key) => delete store[key]);
     }),
   };
-};
+}
 
-export const mockTimer = () => {
+export async function mockTimer() {
   jest.useFakeTimers();
   return {
     advanceTimersByTime: jest.advanceTimersByTime,
     runAllTimers: jest.runAllTimers,
     clearAllTimers: jest.clearAllTimers,
   };
-};
+}
 
-export const mockModule = (moduleName: string, mockExports: Record<string, unknown>) => {
+export async function mockModule(moduleName: string, mockExports: Record<string, unknown>) {
   jest.mock(moduleName, () => mockExports, { virtual: true });
-};
+}
 
-export const mockEnvironment = (envVars: { [key: string]: string }) => {
+export async function mockEnvironment(envVars: { [key: string]: string }) {
   const originalEnv = process.env;
   beforeAll(() => {
     process.env = { ...originalEnv, ...envVars };
@@ -96,4 +101,4 @@ export const mockEnvironment = (envVars: { [key: string]: string }) => {
   afterAll(() => {
     process.env = originalEnv;
   });
-};
+}
