@@ -23,9 +23,6 @@ import {
   wrapExpectToThrowError,
 } from './assertions';
 
-// Testing
-import { setupLogging, closeLogStreams, TestResult } from './testing';
-
 // Mocking utilities
 import {
   mockPerformanceNow,
@@ -78,10 +75,6 @@ export {
   expectToBeGreaterThan,
   wrapExpectToThrowError,
 
-  // Logging
-  setupLogging,
-  closeLogStreams,
-
   // Mocking utilities
   mockPerformanceNow,
   realPerformanceNow,
@@ -108,6 +101,3 @@ export {
   ClientLogger,
   ServerLogger,
 };
-
-// Re-export TestResult as a type
-export type { TestResult };
