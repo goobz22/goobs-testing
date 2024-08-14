@@ -1,3 +1,5 @@
+'use server';
+
 import { performance } from 'perf_hooks';
 
 type BenchmarkFunction = (() => void) | (() => Promise<void>);
@@ -37,9 +39,9 @@ export async function compareBenchmarks(
 /**
  * Formats benchmark results for easy reading.
  * @param results Benchmark results to format
- * @returns A formatted string of the results
+ * @returns A Promise resolving to a formatted string of the results
  */
-export function formatBenchmarkResults(results: Record<string, number>): string {
+export async function formatBenchmarkResults(results: Record<string, number>): Promise<string> {
   return Object.entries(results)
     .map(([name, time]) => `${name}: ${time.toFixed(4)} ms`)
     .join('\n');
@@ -56,5 +58,5 @@ export async function runBenchmarks(
   iterations: number = 1000,
 ): Promise<string> {
   const results = await compareBenchmarks(fns, iterations);
-  return `Benchmark Results:\n${formatBenchmarkResults(results)}`;
+  return `Benchmark Results:\n${await formatBenchmarkResults(results)}`;
 }
