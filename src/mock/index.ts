@@ -1,8 +1,8 @@
 'use server';
-
 import { performance } from 'perf_hooks';
+import { jest, beforeAll, afterAll } from '@jest/globals';
 
-type MockWithAdvanceTime = jest.Mock<number, []> & {
+type MockWithAdvanceTime = jest.Mock & {
   advanceTime: (ms: number) => void;
 };
 
@@ -25,18 +25,21 @@ export async function mockConsole() {
   const mockWarn = jest.fn();
   const mockInfo = jest.fn();
   const original = { ...console };
+
   beforeAll(() => {
     console.log = mockLog;
     console.error = mockError;
     console.warn = mockWarn;
     console.info = mockInfo;
   });
+
   afterAll(() => {
     console.log = original.log;
     console.error = original.error;
     console.warn = original.warn;
     console.info = original.info;
   });
+
   return { mockLog, mockError, mockWarn, mockInfo };
 }
 
